@@ -1,7 +1,7 @@
 #!/bin/bash
 getElementFromRat()
 {
-	7z -aoa e "$1" pkg-header &> /dev/zero
+	tar -xf "$1" pkg-header
 
 	echo "$(head -n $2 pkg-header | tail -n 1 | cut -d "=" -f 2)"
 

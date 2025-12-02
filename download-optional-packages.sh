@@ -4,13 +4,13 @@ downloadPackages() {
 	unzip MiceWine-Packages.zip -d built-pkgs
 }
 
-filterOptionalPackages() {
+filterDownloadablePackages() {
 	cd built-pkgs
 
 	local FILTERED_PACKAGES=""
 
-	for i in $(ls *.isOptional); do 
-		FILTERED_PACKAGES="$FILTERED_PACKAGES $(echo $i | sed "s/.isOptional/.rat/g")"
+	for i in $(ls *.isDownloadable); do 
+		FILTERED_PACKAGES="$FILTERED_PACKAGES $(echo $i | sed "s/.isDownloadable/.rat/g")"
 	done
 
 	mv $FILTERED_PACKAGES $INIT_DIR/components/Packages
@@ -25,4 +25,4 @@ export INIT_DIR=$PWD
 mkdir -p components/Packages
 
 downloadPackages
-filterOptionalPackages
+filterDownloadablePackages

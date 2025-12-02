@@ -1,12 +1,11 @@
 #!/bin/bash
-
 showHelp()
 {
 	echo "Usage: $0 [package name] [package pretty name] [vulkan driver lib name] [architecture] [version] [category] [destdir-pkg] [output folder]"
 	echo ""
 }
 
-symlink2sh() {
+symlinkToSh() {
   for folder in $(find $1 -type d); do
     if [ -d "$folder" ]; then
       cd "$folder"
@@ -29,6 +28,11 @@ symlink2sh() {
   done
 }
 
+if [ $# -lt 8 ]; then
+	showHelp
+	exit 0
+fi
+
 export INIT_DIR=$PWD
 export APP_ROOT_DIR=/data/data/com.micewine.emu/
 
@@ -40,11 +44,6 @@ export PACKAGE_VERSION=$5
 export PACKAGE_CATEGORY=$6
 export DESTDIR_PKG=$7
 export OUTDIR=$8
-
-if [ $# -lt 8 ]; then
-	showHelp
-	exit 0
-fi
 
 if [ "$9" != "0" ]; then
   echo ""
@@ -65,6 +64,6 @@ echo "version=$PACKAGE_VERSION" >> pkg-header
 echo "architecture=$PACKAGE_ARCHITECTURE" >> pkg-header
 echo "vkDriverLib=$PACKAGE_VK_DRIVER_LIB" >> pkg-header
 
-symlink2sh "files/" 
+symlinkToSh "files/"
 
-7z -tzip -mx=5 a "$OUTDIR/$PACKAGE_NAME-$PACKAGE_VERSION-$PACKAGE_ARCHITECTURE.rat" &> /dev/zero
+tar -cJf "$OUTDIR/$PACKAGE_NAME-$PACKAGE_VERSION-$PACKAGE_ARCHITECTURE.rat" pkg-header $(ls | grep -v pkg-header)
